@@ -1,6 +1,7 @@
 import React from 'react'
 import CreatePost from './CreatePost'
 import Post from './Post'
+import { posts } from '../data'
 
 const Home = () => {
   return (
@@ -8,8 +9,9 @@ const Home = () => {
       <main>
         <CreatePost />
 
-        <Post />
-        <Post />
+        {posts.map((post) => {
+          return <Post {...post} key={post.id} />
+        })}
       </main>
     </>
   )

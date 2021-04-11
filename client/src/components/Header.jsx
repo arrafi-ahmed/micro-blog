@@ -17,12 +17,12 @@ const Header = () => {
             >
               <ul className='navbar-nav ms-auto mb-2 mb-lg-0'>
                 <li className='nav-item'>
-                  <NavLink to='/' activeclassNameName='active'>
+                  <NavLink to='/' activeclassName='active'>
                     <span className='nav-link'>Home</span>
                   </NavLink>
                 </li>
                 <li className='nav-item'>
-                  <NavLink to='/signin' activeclassNameName='active'>
+                  <NavLink to='/signin' activeclassName='active'>
                     <span className='nav-link'>Signin</span>
                   </NavLink>
                 </li>

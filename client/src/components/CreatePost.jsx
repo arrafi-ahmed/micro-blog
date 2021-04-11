@@ -7,7 +7,7 @@ const CreatePost = () => {
         <div className='row'>
           <div className='col-lg-12 createPost my-5 p-3 border rounded bg-light'>
             <form>
-              <label for='createPost' className='form-label'>
+              <label htmlFor='createPost' className='form-label'>
                 Create Post
               </label>
               <textarea

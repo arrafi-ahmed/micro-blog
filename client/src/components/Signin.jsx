@@ -1,58 +1,66 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const Login = () => {
+  const [showSignin, setShowSignin] = useState(true)
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setShowSignin(!showSignin)
+  }
   return (
     <>
-      <main>
+      <main className='d-flex justify-content-center align-items-center h-100'>
         <div className='container'>
           <div className='row'>
             <div className='col-lg-6 mx-auto my-5'>
-              <form>
+              <form className='bg-light p-5'>
                 <div className='row mb-3'>
-                  <label for='inputEmail3' className='col-sm-2 col-form-label'>
-                    Email
+                  <label htmlFor='username' className='col-sm-2 col-form-label'>
+                    Username
                   </label>
                   <div className='col-sm-10'>
-                    <input
-                      type='email'
-                      className='form-control'
-                      id='inputEmail3'
-                    />
+                    <input type='text' className='form-control' id='username' />
                   </div>
                 </div>
                 <div className='row mb-3'>
-                  <label
-                    for='inputPassword3'
-                    className='col-sm-2 col-form-label'
-                  >
+                  <label htmlFor='password' className='col-sm-2 col-form-label'>
                     Password
                   </label>
                   <div className='col-sm-10'>
                     <input
                       type='password'
                       className='form-control'
-                      id='inputPassword3'
+                      id='password'
                     />
                   </div>
                 </div>
 
                 <div className='d-flex justify-content-center'>
-                  <div className='d-inline-block'>
-                    <span>
-                      No account? <a href='#'>Signup</a>
-                    </span>
-                    <button type='submit' className='btn btn-primary'>
-                      Signin
-                    </button>
-                  </div>
-                  <div className='d-inline-block'>
-                    <span>
-                      Already registered? <a href='#'>Signin</a>
-                    </span>
-                    <button type='submit' className='btn btn-primary'>
-                      Signup
-                    </button>
-                  </div>
+                  {showSignin && (
+                    <div className='d-inline-block text-center'>
+                      <button type='submit' className='btn btn-primary'>
+                        Signin
+                      </button>
+                      <span className='d-block mt-2'>
+                        No account?{' '}
+                        <a href='#' onClick={handleSubmit}>
+                          Signup
+                        </a>
+                      </span>
+                    </div>
+                  )}
+                  {!showSignin && (
+                    <div className='d-inline-block text-center'>
+                      <button type='submit' className='btn btn-primary'>
+                        Signup
+                      </button>
+                      <span className='d-block mt-2'>
+                        Already registered?{' '}
+                        <a href='#' onClick={handleSubmit}>
+                          Signin
+                        </a>
+                      </span>
+                    </div>
+                  )}
                 </div>
               </form>
             </div>
