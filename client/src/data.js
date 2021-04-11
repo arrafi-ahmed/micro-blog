@@ -1,4 +1,4 @@
-export const posts = [
+export const postsData = [
   {
     id: 1,
     username: 'mark06',
