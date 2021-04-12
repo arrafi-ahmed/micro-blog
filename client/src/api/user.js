@@ -9,6 +9,9 @@ const UserApi = {
   createUser(signupData) {
     return axios.post(`${apiUri}/createUser`, signupData)
   },
+  checkCredentials(signinData) {
+    return axios.post(`${apiUri}/checkCredentials`, { ...signinData })
+  },
 }
 
 export default UserApi

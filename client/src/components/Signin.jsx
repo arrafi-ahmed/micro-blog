@@ -11,7 +11,29 @@ const Login = () => {
     e.preventDefault()
     setShowSignin(!showSignin)
   }
-  const handleSignin = () => {}
+  const handleSignin = (e) => {
+    e.preventDefault()
+    const signinData = {
+      username: username.current.value,
+      password: password.current.value,
+    }
+    UserApi.checkCredentials(signinData)
+      .then((res) => {
+        if (res.data.valid) {
+          localStorage.setItem('token', res.headers.authorization)
+          global.setAlert({ type: 'success', message: res.data.message })
+          window.location.replace('/')
+        } else {
+          throw Error(res.data.message)
+        }
+      })
+      .catch((err) => {
+        global.setAlert({
+          type: 'danger',
+          message: err.response ? err.response.data.message : err.toString(),
+        })
+      })
+  }
   const handleSignup = (e) => {
     e.preventDefault()
     const signupData = {
@@ -21,12 +43,13 @@ const Login = () => {
     UserApi.isUserExist(signupData.username)
       .then((res) => {
         if (!res.data.exist) {
-          UserApi.createUser(signupData)
+          return UserApi.createUser(signupData)
         } else {
           throw Error(res.data.message)
         }
       })
       .then((res) => {
+        localStorage.setItem('token', res.headers.authorization)
         global.setAlert({ type: 'success', message: res.data.message })
         window.location.replace('/')
       })
