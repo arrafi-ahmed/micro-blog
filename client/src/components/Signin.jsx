@@ -1,10 +1,41 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useContext } from 'react'
+import UserApi from '../api/user'
+import { GlobalContext } from '../context/globalContext'
 
 const Login = () => {
+  const global = useContext(GlobalContext)
   const [showSignin, setShowSignin] = useState(true)
-  const handleSubmit = (e) => {
+  const username = useRef(null)
+  const password = useRef(null)
+  const toggleButton = (e) => {
     e.preventDefault()
     setShowSignin(!showSignin)
+  }
+  const handleSignin = () => {}
+  const handleSignup = (e) => {
+    e.preventDefault()
+    const signupData = {
+      username: username.current.value,
+      password: password.current.value,
+    }
+    UserApi.isUserExist(signupData.username)
+      .then((res) => {
+        if (!res.data.exist) {
+          UserApi.createUser(signupData)
+        } else {
+          throw Error(res.data.message)
+        }
+      })
+      .then((res) => {
+        global.setAlert({ type: 'success', message: res.data.message })
+        window.location.replace('/')
+      })
+      .catch((err) => {
+        global.setAlert({
+          type: 'danger',
+          message: err.response ? err.response.data.message : err.toString(),
+        })
+      })
   }
   return (
     <>
@@ -18,7 +49,12 @@ const Login = () => {
                     Username
                   </label>
                   <div className='col-sm-10'>
-                    <input type='text' className='form-control' id='username' />
+                    <input
+                      ref={username}
+                      type='text'
+                      className='form-control'
+                      id='username'
+                    />
                   </div>
                 </div>
                 <div className='row mb-3'>
@@ -27,6 +63,7 @@ const Login = () => {
                   </label>
                   <div className='col-sm-10'>
                     <input
+                      ref={password}
                       type='password'
                       className='form-control'
                       id='password'
@@ -35,27 +72,34 @@ const Login = () => {
                 </div>
 
                 <div className='d-flex justify-content-center'>
-                  {showSignin && (
+                  {(showSignin && (
                     <div className='d-inline-block text-center'>
-                      <button type='submit' className='btn btn-primary'>
+                      <button
+                        onClick={handleSignin}
+                        type='submit'
+                        className='btn btn-primary'
+                      >
                         Signin
                       </button>
                       <span className='d-block mt-2'>
                         No account?{' '}
-                        <a href='# ' onClick={handleSubmit}>
+                        <a href='# ' onClick={toggleButton}>
                           Signup
                         </a>
                       </span>
                     </div>
-                  )}
-                  {!showSignin && (
+                  )) || (
                     <div className='d-inline-block text-center'>
-                      <button type='submit' className='btn btn-primary'>
+                      <button
+                        onClick={handleSignup}
+                        type='submit'
+                        className='btn btn-primary'
+                      >
                         Signup
                       </button>
                       <span className='d-block mt-2'>
                         Already registered?{' '}
-                        <a href='# ' onClick={handleSubmit}>
+                        <a href='# ' onClick={toggleButton}>
                           Signin
                         </a>
                       </span>
