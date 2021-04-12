@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import CreateComment from './CreateComment'
-import Comment from './Comment'
+import Comments from './Comments'
 
 const Post = ({ username, date, details, upvote_count, downvote_count }) => {
   const [vote, setVote] = useState({
@@ -14,7 +13,6 @@ const Post = ({ username, date, details, upvote_count, downvote_count }) => {
   }
   const handleVote = (e) => {
     setVote({ ...vote, [e.target.name]: parseInt(vote[e.target.name]) + 1 })
-    console.log(vote)
   }
   return (
     <>
@@ -62,15 +60,7 @@ const Post = ({ username, date, details, upvote_count, downvote_count }) => {
               </button>
             </div>
 
-            {showComments && (
-              <div className='comments border-start border-3 my-3'>
-                <div className='tab ms-5'>
-                  <CreateComment />
-                  <Comment />
-                  <Comment />
-                </div>
-              </div>
-            )}
+            {showComments && <Comments />}
           </div>
         </div>
       </div>
