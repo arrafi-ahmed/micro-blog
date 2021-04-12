@@ -42,7 +42,7 @@ const Login = () => {
                       </button>
                       <span className='d-block mt-2'>
                         No account?{' '}
-                        <a href='#' onClick={handleSubmit}>
+                        <a href='# ' onClick={handleSubmit}>
                           Signup
                         </a>
                       </span>
@@ -55,7 +55,7 @@ const Login = () => {
                       </button>
                       <span className='d-block mt-2'>
                         Already registered?{' '}
-                        <a href='#' onClick={handleSubmit}>
+                        <a href='# ' onClick={handleSubmit}>
                           Signin
                         </a>
                       </span>

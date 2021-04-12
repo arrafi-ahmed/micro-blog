@@ -1,3 +1,7 @@
 .navbar a {
   text-decoration: none;
 }
+.badge {
+  padding: 0.2em 0.4em;
+  font-size: 1em;
+}

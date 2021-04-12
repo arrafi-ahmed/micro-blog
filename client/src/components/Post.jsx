@@ -3,11 +3,18 @@ import CreateComment from './CreateComment'
 import Comment from './Comment'
 
 const Post = ({ username, date, details, upvote_count, downvote_count }) => {
-  console.log(username)
+  const [vote, setVote] = useState({
+    upvote: upvote_count,
+    downvote: downvote_count,
+  })
   const [showComments, setShowComments] = useState(false)
   const toggleComment = (e) => {
     e.preventDefault()
     setShowComments(!showComments)
+  }
+  const handleVote = (e) => {
+    setVote({ ...vote, [e.target.name]: parseInt(vote[e.target.name]) + 1 })
+    console.log(vote)
   }
   return (
     <>
@@ -24,15 +31,25 @@ const Post = ({ username, date, details, upvote_count, downvote_count }) => {
             </div>
             <p>{details}</p>
             <div className='btn-group btn-group-sm' role='group'>
-              <button type='button' className='btn btn-outline-primary'>
+              <button
+                onClick={handleVote}
+                name='upvote'
+                type='button'
+                className='btn btn-outline-primary'
+              >
                 <span className='badge rounded bg-success me-2'>
-                  {upvote_count}
+                  {vote.upvote}
                 </span>
                 Upvote
               </button>
-              <button type='button' className='btn btn-outline-primary'>
+              <button
+                onClick={handleVote}
+                name='downvote'
+                type='button'
+                className='btn btn-outline-primary'
+              >
                 <span className='badge rounded bg-danger me-2'>
-                  {downvote_count}
+                  {vote.downvote}
                 </span>
                 Downvote
               </button>

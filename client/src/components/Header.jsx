@@ -17,13 +17,23 @@ const Header = () => {
             >
               <ul className='navbar-nav ms-auto mb-2 mb-lg-0'>
                 <li className='nav-item'>
-                  <NavLink to='/' activeclassName='active'>
-                    <span className='nav-link'>Home</span>
+                  <NavLink
+                    exact
+                    to='/'
+                    className='nav-link'
+                    activeClassName='active'
+                  >
+                    Home
                   </NavLink>
                 </li>
                 <li className='nav-item'>
-                  <NavLink to='/signin' activeclassName='active'>
-                    <span className='nav-link'>Signin</span>
+                  <NavLink
+                    exact
+                    to='/signin'
+                    className='nav-link'
+                    activeClassName='active'
+                  >
+                    Signin
                   </NavLink>
                 </li>
               </ul>
