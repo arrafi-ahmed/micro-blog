@@ -18,6 +18,10 @@ const postSchema = mongoose.Schema(
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
       default: undefined,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   { timestamps: true }
 )

@@ -4,6 +4,7 @@ import Comment from './Comment'
 import { commentsData } from '../data'
 
 const Comments = () => {
+  const token = localStorage.getItem('token')
   const [comments, setComments] = useState([])
 
   useEffect(() => {
@@ -13,7 +14,7 @@ const Comments = () => {
     <>
       <div className='comments border-start border-3 my-3'>
         <div className='tab ms-5'>
-          <CreateComment />
+          {token && <CreateComment />}
           {comments.map((comment) => (
             <Comment {...comment} key='comment.id' />
           ))}

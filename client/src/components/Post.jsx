@@ -1,7 +1,15 @@
 import React, { useState } from 'react'
 import Comments from './Comments'
+import { localDate } from '../util'
 
-const Post = ({ username, date, details, upvote_count, downvote_count }) => {
+const Post = ({
+  user: { username },
+  createdAt,
+  details,
+  upvote_count,
+  downvote_count,
+}) => {
+  const token = localStorage.getItem('token')
   const [vote, setVote] = useState({
     upvote: upvote_count,
     downvote: downvote_count,
@@ -12,6 +20,7 @@ const Post = ({ username, date, details, upvote_count, downvote_count }) => {
     setShowComments(!showComments)
   }
   const handleVote = (e) => {
+    if (!token) return
     setVote({ ...vote, [e.target.name]: parseInt(vote[e.target.name]) + 1 })
   }
   return (
@@ -25,7 +34,7 @@ const Post = ({ username, date, details, upvote_count, downvote_count }) => {
                 <b>{username}</b>
               </small>
               at
-              <small className='ps-2'>{date}</small>
+              <small className='ps-2'>{localDate(createdAt)}</small>
             </div>
             <p>{details}</p>
             <div className='btn-group btn-group-sm' role='group'>
@@ -33,7 +42,7 @@ const Post = ({ username, date, details, upvote_count, downvote_count }) => {
                 onClick={handleVote}
                 name='upvote'
                 type='button'
-                className='btn btn-outline-primary'
+                className={`btn btn-outline-primary ${!token && `disabled`}`}
               >
                 <span className='badge rounded bg-success me-2'>
                   {vote.upvote}
@@ -44,7 +53,7 @@ const Post = ({ username, date, details, upvote_count, downvote_count }) => {
                 onClick={handleVote}
                 name='downvote'
                 type='button'
-                className='btn btn-outline-primary'
+                className={`btn btn-outline-primary ${!token && `disabled`}`}
               >
                 <span className='badge rounded bg-danger me-2'>
                   {vote.downvote}

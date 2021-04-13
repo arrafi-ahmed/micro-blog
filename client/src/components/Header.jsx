@@ -2,10 +2,16 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 const Header = () => {
+  const token = localStorage.getItem('token')
+  const handleSignout = (e) => {
+    e.preventDefault()
+    localStorage.clear()
+    window.location.replace('/')
+  }
   return (
     <>
       <header>
-        <nav className='navbar navbar-expand-lg navbar-light bg-light'>
+        <nav className='navbar navbar-expand-lg navbar-light bg-light mb-5'>
           <div className='container'>
             <NavLink to='/'>
               <span className='navbar-brand'>MicroBlog</span>
@@ -26,16 +32,24 @@ const Header = () => {
                     Home
                   </NavLink>
                 </li>
-                <li className='nav-item'>
-                  <NavLink
-                    exact
-                    to='/signin'
-                    className='nav-link'
-                    activeClassName='active'
-                  >
-                    Signin
-                  </NavLink>
-                </li>
+                {(!token && (
+                  <li className='nav-item'>
+                    <NavLink
+                      exact
+                      to='/signin'
+                      className='nav-link'
+                      activeClassName='active'
+                    >
+                      Signin
+                    </NavLink>
+                  </li>
+                )) || (
+                  <li className='nav-item pointer'>
+                    <span onClick={handleSignout} className='nav-link'>
+                      Signout
+                    </span>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
