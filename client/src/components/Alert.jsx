@@ -5,7 +5,7 @@ const Alert = ({ alert, event }) => {
     <>
       <div className='d-flex justify-content-center'>
         <div
-          className={`alert alert-${alert.type} text-center mt-3`}
+          className={`alert custom-alert position-fixed alert-${alert.type} text-center mt-3`}
           role='alert'
         >
           {alert.message}

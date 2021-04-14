@@ -1,5 +1,7 @@
 const router = require('express').Router()
-commentController = require('../controllers/comment')
+const commentController = require('../controllers/comment')
 const authToken = require('../middlewares/auth-token')
+
+router.post('/createComment', authToken, commentController.create_comment)
 
 module.exports = router

@@ -30,6 +30,7 @@ app.listen(port, (err) => {
 //routes
 app.use('/api/user', require('./api/routes/user'))
 app.use('/api/post', require('./api/routes/post'))
+app.use('/api/comment', require('./api/routes/comment'))
 
 // redirect react routes in production build
 if (process.env.NODE_ENV === 'production') {

@@ -1,16 +1,18 @@
 import React from 'react'
+import { localDate } from '../util'
 
-const Comment = ({ name, details, date }) => {
+const Comment = ({ username, details, createdAt }) => {
   return (
     <>
       <div className='comment mb-3 p-2 border rounded'>
         <div className='topbar'>
           <small>
-            <b>{name}</b>
+            <b>{username}</b>
           </small>{' '}
           at
           <small>
-            <i>{date}</i>
+            {' '}
+            <i>{localDate(createdAt)}</i>
           </small>
         </div>
         <p>{details}</p>

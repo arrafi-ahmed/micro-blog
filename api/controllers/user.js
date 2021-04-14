@@ -7,7 +7,7 @@ exports.is_user_exist = (req, res) => {
       if (user) {
         res.status(200).json({ message: 'User exist', exist: true })
       } else {
-        res.status(200).json({ message: 'User does not exist', exist: false })
+        res.status(204).json({ message: 'User does not exist', exist: false })
       }
     })
     .catch((err) => res.status(500).json({ message: 'Server error' }))
@@ -40,7 +40,7 @@ exports.check_credentials = (req, res) => {
           res.status(401).json({ message: 'Invalid credentials', valid: false })
         }
       } else {
-        res.status(400).json({ message: 'User doesn not exist', valid: false })
+        res.status(401).json({ message: 'User doesn not exist', valid: false })
       }
     })
     .catch((err) => {

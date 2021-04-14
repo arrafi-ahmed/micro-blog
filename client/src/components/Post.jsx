@@ -3,6 +3,7 @@ import Comments from './Comments'
 import { localDate } from '../util'
 
 const Post = ({
+  _id,
   user: { username },
   createdAt,
   details,
@@ -27,8 +28,8 @@ const Post = ({
     <>
       <div className='container'>
         <div className='row'>
-          <div className='col-lg-12 post mb-5 p-3 border rounded bg-light'>
-            <div className='topbar mb-3'>
+          <div className='col-lg-12 post mb-3 p-3 border rounded bg-light'>
+            <div className='topbar border-bottom d-inline'>
               Posted by
               <small className='px-2'>
                 <b>{username}</b>
@@ -36,7 +37,7 @@ const Post = ({
               at
               <small className='ps-2'>{localDate(createdAt)}</small>
             </div>
-            <p>{details}</p>
+            <p className='mt-2 mb-3 fs-5'>{details}</p>
             <div className='btn-group btn-group-sm' role='group'>
               <button
                 onClick={handleVote}
@@ -69,7 +70,7 @@ const Post = ({
               </button>
             </div>
 
-            {showComments && <Comments />}
+            {showComments && <Comments postId={_id} />}
           </div>
         </div>
       </div>

@@ -65,13 +65,13 @@ const Login = () => {
       <main className='d-flex justify-content-center align-items-center h-100'>
         <div className='container'>
           <div className='row'>
-            <div className='col-lg-6 mx-auto my-5'>
+            <div className='col-lg-5 mx-auto my-5'>
               <form className='bg-light p-5'>
                 <div className='row mb-3'>
-                  <label htmlFor='username' className='col-sm-2 col-form-label'>
+                  <label htmlFor='username' className='col-sm-3 col-form-label'>
                     Username
                   </label>
-                  <div className='col-sm-10'>
+                  <div className='col-sm-9'>
                     <input
                       ref={username}
                       type='text'
@@ -81,10 +81,10 @@ const Login = () => {
                   </div>
                 </div>
                 <div className='row mb-3'>
-                  <label htmlFor='password' className='col-sm-2 col-form-label'>
+                  <label htmlFor='password' className='col-sm-3 col-form-label'>
                     Password
                   </label>
-                  <div className='col-sm-10'>
+                  <div className='col-sm-9'>
                     <input
                       ref={password}
                       type='password'

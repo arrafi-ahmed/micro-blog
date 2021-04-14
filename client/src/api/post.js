@@ -12,6 +12,9 @@ const PostApi = {
       headers: { authorization: getToken() },
     })
   },
+  getCommentsByPost(postId) {
+    return axios.post(`${apiUri}/getCommentsByPost`, postId)
+  },
 }
 
 export default PostApi

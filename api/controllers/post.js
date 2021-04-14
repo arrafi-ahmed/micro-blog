@@ -18,3 +18,18 @@ exports.create_post = (req, res) => {
     })
     .catch((err) => res.status(500).json({ message: 'Server error' }))
 }
+exports.getCommentsByPost = (req, res) => {
+  Post.findOne({ _id: req.body.postId })
+    .select('user comments')
+    .populate('comments')
+    .then((post) => {
+      if (post.comments.length > 0) {
+        res.status(200).send(post)
+      } else {
+        res.status(204).json({ message: null })
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ message: 'Server error' })
+    })
+}
