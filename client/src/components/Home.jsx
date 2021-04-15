@@ -43,7 +43,6 @@ const Home = () => {
     <>
       <main>
         {token && <CreatePost ref={details} handlePost={handlePost} />}
-        {}
         {(posts.length > 0 &&
           posts.map((post) => {
             return <Post {...post} key={post.id} />

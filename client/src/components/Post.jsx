@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Comments from './Comments'
+import PostApi from '../api/post'
 import { localDate } from '../util'
+import { GlobalContext } from '../context/globalContext'
 
 const Post = ({
   _id,
@@ -10,19 +12,45 @@ const Post = ({
   upvote_count,
   downvote_count,
 }) => {
+  const global = useContext(GlobalContext)
   const token = localStorage.getItem('token')
-  const [vote, setVote] = useState({
-    upvote: upvote_count,
-    downvote: downvote_count,
-  })
+  const [upvote, setUpvote] = useState(upvote_count)
+  const [downvote, setDownvote] = useState(downvote_count)
   const [showComments, setShowComments] = useState(false)
   const toggleComment = (e) => {
     e.preventDefault()
     setShowComments(!showComments)
   }
-  const handleVote = (e) => {
+  const handleUpvote = (e) => {
+    e.preventDefault()
     if (!token) return
-    setVote({ ...vote, [e.target.name]: parseInt(vote[e.target.name]) + 1 })
+    setUpvote(upvote + 1)
+    PostApi.createUpvote({ postId: _id })
+      .then((res) => {
+        global.setAlert({ type: 'success', message: 'Upvote successful' })
+      })
+      .catch((err) => {
+        setUpvote(upvote)
+        global.setAlert({
+          type: 'danger',
+          message: err.response ? err.response.data.message : err.toString(),
+        })
+      })
+  }
+  const handleDownvote = (e) => {
+    e.preventDefault()
+    if (!token) return
+    PostApi.createDownvote({ postId: _id })
+      .then((res) => {
+        setDownvote(downvote + 1)
+        global.setAlert({ type: 'success', message: 'Downvote successful' })
+      })
+      .catch((err) =>
+        global.setAlert({
+          type: 'danger',
+          message: err.response ? err.response.data.message : err.toString(),
+        })
+      )
   }
   return (
     <>
@@ -40,25 +68,21 @@ const Post = ({
             <p className='mt-2 mb-3 fs-5'>{details}</p>
             <div className='btn-group btn-group-sm' role='group'>
               <button
-                onClick={handleVote}
+                onClick={handleUpvote}
                 name='upvote'
                 type='button'
                 className={`btn btn-outline-primary ${!token && `disabled`}`}
               >
-                <span className='badge rounded bg-success me-2'>
-                  {vote.upvote}
-                </span>
+                <span className='badge rounded bg-success me-2'>{upvote}</span>
                 Upvote
               </button>
               <button
-                onClick={handleVote}
+                onClick={handleDownvote}
                 name='downvote'
                 type='button'
                 className={`btn btn-outline-primary ${!token && `disabled`}`}
               >
-                <span className='badge rounded bg-danger me-2'>
-                  {vote.downvote}
-                </span>
+                <span className='badge rounded bg-danger me-2'>{downvote}</span>
                 Downvote
               </button>
               <button

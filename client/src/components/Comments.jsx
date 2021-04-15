@@ -57,7 +57,7 @@ const Comments = ({ postId }) => {
             comments.length > 0 &&
             comments.map((comment) => (
               <Comment {...comment} key='comment.id' />
-            ))) || <h6 className='text-center'>No comment yet</h6>}
+            ))) || <p className='text-center'>No comment yet</p>}
         </div>
       </div>
     </>

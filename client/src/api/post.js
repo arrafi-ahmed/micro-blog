@@ -15,6 +15,16 @@ const PostApi = {
   getCommentsByPost(postId) {
     return axios.post(`${apiUri}/getCommentsByPost`, postId)
   },
+  createUpvote(upvoteData) {
+    return axios.post(`${apiUri}/createUpvote`, upvoteData, {
+      headers: { authorization: getToken() },
+    })
+  },
+  createDownvote(downvoteData) {
+    return axios.post(`${apiUri}/createDownvote`, downvoteData, {
+      headers: { authorization: getToken() },
+    })
+  },
 }
 
 export default PostApi

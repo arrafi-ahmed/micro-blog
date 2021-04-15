@@ -13,15 +13,12 @@ const userSchema = mongoose.Schema(
     },
     posts: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
-      default: undefined,
     },
     upvotes: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
-      default: undefined,
     },
     downvotes: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
-      default: undefined,
     },
   },
   { timestamps: true }
