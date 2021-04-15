@@ -27,6 +27,9 @@ const Post = ({
     setUpvote(upvote + 1)
     PostApi.createUpvote({ postId: _id })
       .then((res) => {
+        if (res.data.changeDownvote) {
+          setDownvote(downvote - 1)
+        }
         global.setAlert({ type: 'success', message: 'Upvote successful' })
       })
       .catch((err) => {
@@ -40,17 +43,21 @@ const Post = ({
   const handleDownvote = (e) => {
     e.preventDefault()
     if (!token) return
+    setDownvote(downvote + 1)
     PostApi.createDownvote({ postId: _id })
       .then((res) => {
-        setDownvote(downvote + 1)
+        if (res.data.changeUpvote) {
+          setUpvote(upvote - 1)
+        }
         global.setAlert({ type: 'success', message: 'Downvote successful' })
       })
-      .catch((err) =>
+      .catch((err) => {
+        setDownvote(downvote)
         global.setAlert({
           type: 'danger',
           message: err.response ? err.response.data.message : err.toString(),
         })
-      )
+      })
   }
   return (
     <>
