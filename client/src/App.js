@@ -6,6 +6,8 @@ import Home from './components/Home'
 import Signin from './components/Signin'
 import Profile from './components/Profile'
 import Alert from './components/Alert'
+import RouteAuth from './components/RouteAuth'
+import RouteUnauth from './components/RouteUnauth'
 import { GlobalContext } from './context/globalContext'
 
 function App() {
@@ -19,9 +21,9 @@ function App() {
         )}
         <Switch>
           <Route path='/' exact component={Home} />
-          <Route path='/profile' exact component={Profile} />
+          <RouteAuth path='/profile' exact component={Profile} />
           <Route path='/profile/:userId' exact component={Profile} />
-          <Route path='/signin' exact component={Signin} />
+          <RouteUnauth path='/signin' exact component={Signin} />
         </Switch>
         <Footer />
       </Router>

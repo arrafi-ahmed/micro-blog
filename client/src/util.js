@@ -10,5 +10,6 @@ export const localDate = (date) => {
 }
 export const getToken = () => {
   const token = localStorage.getItem('token')
-  return token === null ? '' : token
+  return token === null ? null : token
 }
+export const isAuthenticated = () => !!getToken()
