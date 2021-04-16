@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getToken } from '../util'
 
 const apiUri = '/api/user'
 
@@ -14,6 +15,11 @@ const UserApi = {
   },
   getPostsByUserId(userData) {
     return axios.post(`${apiUri}/getPostsByUserId`, userData)
+  },
+  getOwnProfile() {
+    return axios.post(`${apiUri}/getOwnProfile`, null, {
+      headers: { authorization: getToken() },
+    })
   },
 }
 

@@ -19,6 +19,7 @@ function App() {
         )}
         <Switch>
           <Route path='/' exact component={Home} />
+          <Route path='/profile' exact component={Profile} />
           <Route path='/profile/:userId' exact component={Profile} />
           <Route path='/signin' exact component={Signin} />
         </Switch>

@@ -1,23 +1,38 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Post from './Post'
 import UserApi from '../api/user'
-import PostApi from '../api/post'
 import { localDate } from '../util'
 import { GlobalContext } from '../context/globalContext'
 
 const Profile = () => {
   const global = useContext(GlobalContext)
-  const { userId } = useParams()
   const token = localStorage.getItem('token')
+  const { userId } = useParams()
   const [user, setUser] = useState([])
   const [posts, setPosts] = useState([])
-  const details = useRef(null)
   const fetchUser = () => {
     UserApi.getPostsByUserId({ userId })
       .then((res) => {
-        setUser(res.data.user)
-        setPosts(res.data.user.posts)
+        if (res.data.user) {
+          setUser(res.data.user)
+          setPosts(res.data.user.posts)
+        }
+      })
+      .catch((err) =>
+        global.setAlert({
+          type: 'danger',
+          message: err.response ? err.response.data.message : err.toString(),
+        })
+      )
+  }
+  const fetchProfile = () => {
+    UserApi.getOwnProfile()
+      .then((res) => {
+        if (res.data.user) {
+          setUser(res.data.user)
+          setPosts(res.data.user.posts)
+        }
       })
       .catch((err) =>
         global.setAlert({
@@ -27,23 +42,13 @@ const Profile = () => {
       )
   }
   useEffect(() => {
-    fetchUser()
-  }, [])
-  const handlePost = (e) => {
-    e.preventDefault()
-    const postData = {
-      details: details.current.value,
+    if (token && !userId) {
+      fetchProfile()
+    } else if (userId) {
+      fetchUser()
     }
-    PostApi.createPost(postData)
-      .then((res) => {
-        fetchUser()
-        global.setAlert({ type: 'success', message: res.data.message })
-      })
-      .catch((err) =>
-        global.setAlert({ type: 'danger', message: err.response.data.message })
-      )
-    details.current.value = null
-  }
+  }, [])
+
   return (
     <>
       <main>
@@ -57,14 +62,19 @@ const Profile = () => {
                   alt='default-profile'
                 />
                 <Link to={`/profile/${userId}`}>
-                  <span className='fw-bold h4 px-3'>{user.username}</span>
+                  <span className='fw-bold h4 px-3'>
+                    {user && user.username}
+                  </span>
                 </Link>
                 <br />
-                <small className='ms-3 fw-light'>
-                  Joined at: {localDate(user.createdAt)}
-                </small>
+                {user && (
+                  <small className='ms-3 fw-light'>
+                    Joined at: {localDate(user.createdAt)}
+                  </small>
+                )}
               </div>
-              {(posts.length > 0 &&
+              {(posts &&
+                posts.length > 0 &&
                 posts.map((post) => {
                   post.user = {
                     _id: userId,

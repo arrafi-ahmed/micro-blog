@@ -22,16 +22,6 @@ const Header = () => {
               id='navbarSupportedContent'
             >
               <ul className='navbar-nav ms-auto mb-2 mb-lg-0'>
-                <li className='nav-item'>
-                  <NavLink
-                    exact
-                    to='/'
-                    className='nav-link'
-                    activeClassName='active'
-                  >
-                    Home
-                  </NavLink>
-                </li>
                 {(!token && (
                   <li className='nav-item'>
                     <NavLink
@@ -44,11 +34,23 @@ const Header = () => {
                     </NavLink>
                   </li>
                 )) || (
-                  <li className='nav-item pointer'>
-                    <span onClick={handleSignout} className='nav-link'>
-                      Signout
-                    </span>
-                  </li>
+                  <>
+                    <li className='nav-item'>
+                      <NavLink
+                        exact
+                        to='/profile'
+                        className='nav-link'
+                        activeClassName='active'
+                      >
+                        Profile
+                      </NavLink>
+                    </li>
+                    <li className='nav-item pointer'>
+                      <span onClick={handleSignout} className='nav-link'>
+                        Signout
+                      </span>
+                    </li>
+                  </>
                 )}
               </ul>
             </div>
