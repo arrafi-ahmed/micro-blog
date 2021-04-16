@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import { Link } from 'react-router-dom'
 import Comments from './Comments'
 import PostApi from '../api/post'
 import { localDate } from '../util'
@@ -6,7 +7,7 @@ import { GlobalContext } from '../context/globalContext'
 
 const Post = ({
   _id,
-  user: { username },
+  user: { _id: userId, username },
   createdAt,
   details,
   upvote_count,
@@ -16,6 +17,10 @@ const Post = ({
   const token = localStorage.getItem('token')
   const [upvote, setUpvote] = useState(upvote_count)
   const [downvote, setDownvote] = useState(downvote_count)
+  const [disableVote, setDisableVote] = useState({
+    upvote: false,
+    downvote: false,
+  })
   const [showComments, setShowComments] = useState(false)
   const toggleComment = (e) => {
     e.preventDefault()
@@ -23,7 +28,9 @@ const Post = ({
   }
   const handleUpvote = (e) => {
     e.preventDefault()
-    if (!token) return
+    if (!token || disableVote.upvote) return
+    console.log(disableVote)
+    setDisableVote({ upvote: true, downvote: false })
     setUpvote(upvote + 1)
     PostApi.createUpvote({ postId: _id })
       .then((res) => {
@@ -42,7 +49,9 @@ const Post = ({
   }
   const handleDownvote = (e) => {
     e.preventDefault()
-    if (!token) return
+    if (!token || disableVote.downvote) return
+    console.log(disableVote)
+    setDisableVote({ downvote: true, upvote: false })
     setDownvote(downvote + 1)
     PostApi.createDownvote({ postId: _id })
       .then((res) => {
@@ -64,13 +73,18 @@ const Post = ({
       <div className='container'>
         <div className='row'>
           <div className='col-lg-12 post mb-3 p-3 border rounded bg-light'>
-            <div className='topbar border-bottom d-inline'>
-              Posted by
-              <small className='px-2'>
-                <b>{username}</b>
-              </small>
-              at
-              <small className='ps-2'>{localDate(createdAt)}</small>
+            <div className='topbar d-inline'>
+              <img
+                className='profile-thumb'
+                src='/images/avatardefault_thumb.png'
+                alt='default-profile'
+              />
+              <Link to={`/profile/${userId}`}>
+                <span className='fw-bold text-decoration-underline px-1'>
+                  {username}
+                </span>
+              </Link>
+              <small className='fst-italic ps-1'>{localDate(createdAt)}</small>
             </div>
             <p className='mt-2 mb-3 fs-5'>{details}</p>
             <div className='btn-group btn-group-sm' role='group'>
@@ -78,7 +92,9 @@ const Post = ({
                 onClick={handleUpvote}
                 name='upvote'
                 type='button'
-                className={`btn btn-outline-primary ${!token && `disabled`}`}
+                className={`btn btn-outline-primary ${
+                  !token || (disableVote.upvote && `disabled`)
+                }`}
               >
                 <span className='badge rounded bg-success me-2'>{upvote}</span>
                 Upvote
@@ -87,7 +103,9 @@ const Post = ({
                 onClick={handleDownvote}
                 name='downvote'
                 type='button'
-                className={`btn btn-outline-primary ${!token && `disabled`}`}
+                className={`btn btn-outline-primary ${
+                  !token || (disableVote.downvote && `disabled`)
+                }`}
               >
                 <span className='badge rounded bg-danger me-2'>{downvote}</span>
                 Downvote

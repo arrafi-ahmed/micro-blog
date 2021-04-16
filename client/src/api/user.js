@@ -12,6 +12,9 @@ const UserApi = {
   checkCredentials(signinData) {
     return axios.post(`${apiUri}/checkCredentials`, { ...signinData })
   },
+  getPostsByUserId(userData) {
+    return axios.post(`${apiUri}/getPostsByUserId`, userData)
+  },
 }
 
 export default UserApi

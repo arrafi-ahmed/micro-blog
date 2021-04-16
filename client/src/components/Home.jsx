@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import CreatePost from './CreatePost'
+import CreatePost from './PostCreate'
 import Post from './Post'
 import PostApi from '../api/post'
 import { GlobalContext } from '../context/globalContext'
@@ -45,7 +45,7 @@ const Home = () => {
         {token && <CreatePost ref={details} handlePost={handlePost} />}
         {(posts.length > 0 &&
           posts.map((post) => {
-            return <Post {...post} key={post.id} />
+            return <Post {...post} key={post._id} />
           })) || <h5 className='text-center'>No posts found</h5>}
       </main>
     </>

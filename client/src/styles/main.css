@@ -1,3 +1,6 @@
+a {
+  text-decoration: none;
+}
 .navbar a {
   text-decoration: none;
 }
@@ -10,4 +13,7 @@
 }
 .custom-alert {
   top: 3rem;
+}
+.profile-thumb {
+  width: 30px;
 }

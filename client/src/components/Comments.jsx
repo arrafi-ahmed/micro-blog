@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
-import CreateComment from './CreateComment'
+import CreateComment from './CommentCreate'
 import Comment from './Comment'
 import PostApi from '../api/post'
 import CommentApi from '../api/comment'

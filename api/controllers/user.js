@@ -47,3 +47,12 @@ exports.check_credentials = (req, res) => {
       res.status(500).json({ message: 'Server error' })
     })
 }
+exports.get_posts_by_user_id = (req, res) => {
+  User.findOne({ _id: req.body.userId })
+    .select('username createdAt')
+    .populate({ path: 'posts', options: { sort: { createdAt: -1 } } })
+    .then((user) => {
+      res.status(200).json({ user })
+    })
+    .catch((err) => res.status(500).json({ message: 'Server error' }))
+}
