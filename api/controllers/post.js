@@ -35,8 +35,12 @@ exports.create_post = (req, res) => {
 }
 exports.get_comments_by_post = (req, res) => {
   Post.findOne({ _id: req.body.postId })
-    .select('user comments')
-    .populate('comments')
+    .select('comments')
+    .populate({
+      path: 'comments',
+      model: 'Comment',
+      populate: { path: 'user_id', model: 'User', select: 'username' },
+    })
     .then((post) => {
       if (post.comments.length > 0) {
         res.status(200).send(post)
@@ -49,8 +53,6 @@ exports.get_comments_by_post = (req, res) => {
     })
 }
 exports.create_upvote = (req, res) => {
-  let changeDownvote = false
-
   User.findById(req.userId)
     .then((user) => {
       // check if post not in upvotes and insert
@@ -80,7 +82,7 @@ exports.create_upvote = (req, res) => {
             } else {
               res.status(200).json({
                 message: 'Upvote successfull',
-                changeDownvote,
+                changeDownvote: false,
               })
             }
           })
@@ -97,10 +99,9 @@ exports.create_upvote = (req, res) => {
           })
           .then((post) => {
             if (post.nModified > 0) {
-              changeDownvote = true
               res.status(200).json({
                 message: 'Upvote successfull',
-                changeDownvote,
+                changeDownvote: true,
               })
             } else {
               throw new Error('Upvote failed')
@@ -118,8 +119,6 @@ exports.create_upvote = (req, res) => {
     })
 }
 exports.create_downvote = (req, res) => {
-  let changeUpvote = false
-
   User.findById(req.userId)
     .then((user) => {
       // check if post not in downvotes and insert
@@ -149,7 +148,7 @@ exports.create_downvote = (req, res) => {
             } else {
               res.status(200).json({
                 message: 'Downvote successfull',
-                changeUpvote,
+                changeUpvote: false,
               })
             }
           })
@@ -166,10 +165,9 @@ exports.create_downvote = (req, res) => {
           })
           .then((post) => {
             if (post.nModified > 0) {
-              changeUpvote = true
               res.status(200).json({
                 message: 'Downvote successfull',
-                changeUpvote,
+                changeUpvote: true,
               })
             } else {
               throw new Error('Downvote failed')

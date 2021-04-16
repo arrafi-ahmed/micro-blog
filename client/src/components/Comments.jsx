@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
-import CreateComment from './CommentCreate'
+import CommentCreate from './CommentCreate'
 import Comment from './Comment'
 import PostApi from '../api/post'
 import CommentApi from '../api/comment'
@@ -14,6 +14,7 @@ const Comments = ({ postId }) => {
   const fetchComments = () => {
     PostApi.getCommentsByPost({ postId })
       .then((res) => {
+        console.log(res.data)
         setComments(res.data.comments)
       })
       .catch((err) =>
@@ -51,12 +52,12 @@ const Comments = ({ postId }) => {
       <div className='comments border-start border-3 my-3'>
         <div className='tab ms-5'>
           {token && (
-            <CreateComment ref={commentContent} handleComment={handleComment} />
+            <CommentCreate ref={commentContent} handleComment={handleComment} />
           )}
           {(comments &&
             comments.length > 0 &&
             comments.map((comment) => (
-              <Comment {...comment} key='comment.id' />
+              <Comment {...comment} key={comment._id} />
             ))) || <p className='text-center'>No comment yet</p>}
         </div>
       </div>

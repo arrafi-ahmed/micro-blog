@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import CreatePost from './PostCreate'
 import Post from './Post'
+import Spinner from './Spinner'
 import PostApi from '../api/post'
 import { GlobalContext } from '../context/globalContext'
 
@@ -9,19 +10,23 @@ const Home = () => {
   const token = localStorage.getItem('token')
   const [posts, setPosts] = useState([])
   const details = useRef(null)
+
   const fetchPosts = () => {
     PostApi.getPosts()
       .then((res) => {
+        global.setLoading(false)
         setPosts(res.data.posts)
       })
-      .catch((err) =>
+      .catch((err) => {
+        global.setLoading(false)
         global.setAlert({
           type: 'danger',
           message: err.response ? err.response.data.message : err.toString(),
         })
-      )
+      })
   }
   useEffect(() => {
+    global.setLoading(true)
     fetchPosts()
   }, [])
   const handlePost = (e) => {
@@ -41,13 +46,17 @@ const Home = () => {
   }
   return (
     <>
-      <main>
-        {token && <CreatePost ref={details} handlePost={handlePost} />}
-        {(posts.length > 0 &&
-          posts.map((post) => {
-            return <Post {...post} key={post._id} />
-          })) || <h5 className='text-center'>No posts found</h5>}
-      </main>
+      {global.loading ? (
+        <Spinner />
+      ) : (
+        <main>
+          {token && <CreatePost ref={details} handlePost={handlePost} />}
+          {(posts.length > 0 &&
+            posts.map((post) => {
+              return <Post {...post} key={post._id} />
+            })) || <h5 className='text-center'>No posts found</h5>}
+        </main>
+      )}
     </>
   )
 }

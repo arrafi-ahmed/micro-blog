@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CreateComment = React.forwardRef(({ handleComment }, ref) => {
+const CommentCreate = React.forwardRef(({ handleComment }, ref) => {
   return (
     <>
       <div className='createComment mb-3'>
@@ -26,4 +26,4 @@ const CreateComment = React.forwardRef(({ handleComment }, ref) => {
   )
 })
 
-export default CreateComment
+export default CommentCreate
