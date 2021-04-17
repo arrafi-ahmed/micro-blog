@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom'
 
 const Links = ({ handleSignout, customClass = null }) => {
   const token = localStorage.getItem('token')
-  console.log(customClass)
   return (
     <>
       <ul className={`navbar-nav ms-auto mb-2 mb-lg-0 ${customClass}`}>

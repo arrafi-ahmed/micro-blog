@@ -1,4 +1,5 @@
 import React from 'react'
+import Button from '../components/Button'
 
 const CreatePost = React.forwardRef(({ handlePost }, ref) => {
   return (
@@ -16,13 +17,11 @@ const CreatePost = React.forwardRef(({ handlePost }, ref) => {
                 id='createPost'
                 rows='3'
               ></textarea>
-              <button
-                onClick={handlePost}
-                type='submit'
-                className='btn btn-primary float-end mt-2'
-              >
-                Post
-              </button>
+              <Button
+                event={handlePost}
+                btnText='Post'
+                customClass='btn-primary float-end mt-2 text-white'
+              />
             </form>
           </div>
         </div>

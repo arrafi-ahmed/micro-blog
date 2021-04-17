@@ -1,4 +1,5 @@
 import React from 'react'
+import Button from '../components/Button'
 
 const CommentCreate = React.forwardRef(({ handleComment }, ref) => {
   return (
@@ -12,13 +13,11 @@ const CommentCreate = React.forwardRef(({ handleComment }, ref) => {
               className='form-control'
               placeholder='Write a comment'
             />
-            <button
-              onClick={handleComment}
-              className='btn btn-outline-primary'
-              type='sumbit'
-            >
-              Comment
-            </button>
+            <Button
+              event={handleComment}
+              btnText='Comment'
+              customClass='btn-sm'
+            />
           </div>
         </form>
       </div>

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useContext } from 'react'
 import UserApi from '../api/user'
+import Button from '../components/Button'
 import { GlobalContext } from '../context/globalContext'
 
 const Login = () => {
@@ -97,13 +98,11 @@ const Login = () => {
                 <div className='d-flex justify-content-center'>
                   {(showSignin && (
                     <div className='d-inline-block text-center'>
-                      <button
-                        onClick={handleSignin}
-                        type='submit'
-                        className='btn btn-primary'
-                      >
-                        Signin
-                      </button>
+                      <Button
+                        event={handleSignin}
+                        btnText='Signin'
+                        customClass='btn-primary text-white'
+                      />
                       <span className='d-block mt-2'>
                         No account?{' '}
                         <a href='# ' onClick={toggleButton}>
@@ -113,13 +112,11 @@ const Login = () => {
                     </div>
                   )) || (
                     <div className='d-inline-block text-center'>
-                      <button
-                        onClick={handleSignup}
-                        type='submit'
-                        className='btn btn-primary'
-                      >
-                        Signup
-                      </button>
+                      <Button
+                        event={handleSignup}
+                        btnText='Signup'
+                        customClass='btn-primary text-white'
+                      />
                       <span className='d-block mt-2'>
                         Already registered?{' '}
                         <a href='# ' onClick={toggleButton}>

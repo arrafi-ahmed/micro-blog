@@ -14,7 +14,6 @@ const Comments = ({ postId }) => {
   const fetchComments = () => {
     PostApi.getCommentsByPost({ postId })
       .then((res) => {
-        console.log(res.data)
         setComments(res.data.comments)
       })
       .catch((err) =>
