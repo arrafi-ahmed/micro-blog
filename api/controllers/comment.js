@@ -12,13 +12,14 @@ exports.create_comment = (req, res) => {
       )
     })
     .then((response) => {
-      if (response.nModified > 0) {
-        res.status(200).json({ message: 'Comment successful' })
-      } else {
-        throw new Error('Comment failed')
-      }
+      if (response.nModified == 0) throw new Error('Comment failed')
+
+      res.status(200).json({ message: 'Comment successful' })
     })
     .catch((err) => {
+      if (err.message == 'Comment failed')
+        res.status(400).json({ message: err.message })
+
       res.status(500).json({ message: 'Server error' })
     })
 }

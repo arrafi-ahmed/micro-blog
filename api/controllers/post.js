@@ -15,23 +15,21 @@ exports.create_post = (req, res) => {
   post
     .save()
     .then((post) => {
-      if (post) {
-        return User.updateOne(
-          { _id: req.userId },
-          { $push: { posts: post._id } }
-        )
-      } else {
-        throw new Error('Post failed')
-      }
+      if (!post) throw new Error('Post failed')
+
+      return User.updateOne({ _id: req.userId }, { $push: { posts: post._id } })
     })
     .then((response) => {
-      if (response.nModified > 0) {
-        res.status(200).json({ message: 'Posted successfuly', post })
-      } else {
-        throw new Error('Post failed')
-      }
+      if (response.nModified == 0) throw new Error('Post failed')
+
+      res.status(200).json({ message: 'Posted successfuly', post })
     })
-    .catch((err) => res.status(500).json({ message: 'Server error' }))
+    .catch((err) => {
+      if (err.message == 'Post failed')
+        res.status(400).json({ message: err.message })
+
+      res.status(500).json({ message: 'Server error' })
+    })
 }
 exports.get_comments_by_post = (req, res) => {
   Post.findById(req.body.postId)
@@ -42,11 +40,9 @@ exports.get_comments_by_post = (req, res) => {
       populate: { path: 'user_id', model: 'User', select: 'username' },
     })
     .then((post) => {
-      if (post.comments.length > 0) {
-        res.status(200).send(post)
-      } else {
-        res.status(204).json({ message: null })
-      }
+      if (post.comments.length > 0) res.status(200).send(post)
+
+      res.status(204).json({ message: null })
     })
     .catch((err) => {
       res.status(500).json({ message: 'Server error' })
@@ -113,7 +109,7 @@ exports.create_upvote = (req, res) => {
     })
     .catch((err) => {
       if (err.message == 'Upvote failed' || err.message == 'Already upvoted') {
-        res.status(400).json({ message: err.toString() })
+        res.status(400).json({ message: err.message })
       } else {
         res.status(500).json({ message: 'Server Error' })
       }
@@ -182,7 +178,7 @@ exports.create_downvote = (req, res) => {
         err.message == 'Downvote failed' ||
         err.message == 'Already downvoted'
       ) {
-        res.status(400).json({ message: err.toString() })
+        res.status(400).json({ message: err.message })
       } else {
         res.status(500).json({ message: 'Server Error' })
       }

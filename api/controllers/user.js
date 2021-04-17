@@ -4,11 +4,10 @@ const jwt = require('jsonwebtoken')
 exports.is_user_exist = (req, res) => {
   User.findOne({ username: req.body.username })
     .then((user) => {
-      if (user) {
-        res.status(200).json({ message: 'User exist', exist: true })
-      } else {
+      if (!user)
         res.status(204).json({ message: 'User does not exist', exist: false })
-      }
+
+      res.status(200).json({ message: 'User exist', exist: true })
     })
     .catch((err) => res.status(500).json({ message: 'Server error' }))
 }
@@ -17,30 +16,31 @@ exports.create_user = (req, res) => {
   user
     .save()
     .then((user) => {
+      if (!user) res.status(400).json({ message: 'Registration failed' })
+
       const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET)
       res
         .status(200)
         .header('authorization', token)
         .json({ message: 'Registration successful' })
     })
-    .catch((err) => res.status(500).json({ message: 'Registration failed' }))
+    .catch((err) => res.status(500).json({ message: 'Server error' }))
 }
 exports.check_credentials = (req, res) => {
   User.findOne({ username: req.body.username })
     .then((user) => {
-      if (user) {
-        if (user.password == req.body.password) {
-          const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET)
-
-          res
-            .status(200)
-            .header('authorization', token)
-            .json({ message: 'Login successful', valid: true })
-        } else {
-          res.status(401).json({ message: 'Invalid credentials', valid: false })
-        }
-      } else {
+      if (!user)
         res.status(401).json({ message: 'User doesn not exist', valid: false })
+
+      if (user.password == req.body.password) {
+        const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET)
+
+        res
+          .status(200)
+          .header('authorization', token)
+          .json({ message: 'Login successful', valid: true })
+      } else {
+        res.status(401).json({ message: 'Invalid credentials', valid: false })
       }
     })
     .catch((err) => {
