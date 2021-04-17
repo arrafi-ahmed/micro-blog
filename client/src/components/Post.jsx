@@ -85,7 +85,7 @@ const Post = ({
               </Link>
               <small className='fst-italic ps-1'>{localDate(createdAt)}</small>
             </div>
-            <p className='mt-2 mb-3 fs-5'>{details}</p>
+            <p className='mt-3 mb-4 ms-2 fs-5'>{details}</p>
             <div className='btn-group btn-group-sm' role='group'>
               <button
                 onClick={handleUpvote}

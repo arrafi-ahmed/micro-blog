@@ -13,7 +13,18 @@ a {
 }
 .custom-alert {
   top: 3rem;
+  z-index: 9;
 }
 .profile-thumb {
   width: 30px;
+}
+@media only screen and (max-width: 576px) {
+  .navbar-mobile {
+    position: absolute;
+    padding: 0 1rem;
+    top: 3rem;
+    left: 0;
+    background: #f8f9fa;
+    width: 100%;
+  }
 }

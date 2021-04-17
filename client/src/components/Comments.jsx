@@ -50,7 +50,7 @@ const Comments = ({ postId }) => {
   return (
     <>
       <div className='comments border-start border-3 my-3'>
-        <div className='tab ms-5'>
+        <div className='tab ms-2 ms-sm-5'>
           {token && (
             <CommentCreate ref={commentContent} handleComment={handleComment} />
           )}

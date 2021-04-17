@@ -1,13 +1,25 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
+import Links from '../components/Links'
 
 const Header = () => {
   const token = localStorage.getItem('token')
+  const [displayWidth, setDisplayWidth] = useState()
+  const [showMobileNav, setShowMobileNav] = useState()
   const handleSignout = (e) => {
     e.preventDefault()
     localStorage.clear()
     window.location.replace('/')
   }
+  const handleMobileNav = (e) => {
+    e.preventDefault()
+    setShowMobileNav(!showMobileNav)
+  }
+  useEffect(() => {
+    setDisplayWidth(window.innerWidth)
+  }, [])
+  const isMobile = displayWidth < 576
+
   return (
     <>
       <header>
@@ -16,44 +28,20 @@ const Header = () => {
             <NavLink to='/'>
               <span className='navbar-brand'>MicroBlog</span>
             </NavLink>
-
-            <div
-              className='collapse navbar-collapse'
-              id='navbarSupportedContent'
-            >
-              <ul className='navbar-nav ms-auto mb-2 mb-lg-0'>
-                {(!token && (
-                  <li className='nav-item'>
-                    <NavLink
-                      exact
-                      to='/signin'
-                      className='nav-link'
-                      activeClassName='active'
-                    >
-                      Signin
-                    </NavLink>
-                  </li>
-                )) || (
-                  <>
-                    <li className='nav-item'>
-                      <NavLink
-                        exact
-                        to='/profile'
-                        className='nav-link'
-                        activeClassName='active'
-                      >
-                        Profile
-                      </NavLink>
-                    </li>
-                    <li className='nav-item pointer'>
-                      <span onClick={handleSignout} className='nav-link'>
-                        Signout
-                      </span>
-                    </li>
-                  </>
+            {(isMobile && (
+              <>
+                <span
+                  class='navbar-toggler-icon'
+                  onClick={handleMobileNav}
+                ></span>
+                {showMobileNav && (
+                  <Links
+                    customClass='navbar-mobile'
+                    handleSignout={handleSignout}
+                  />
                 )}
-              </ul>
-            </div>
+              </>
+            )) || <Links handleSignout={handleSignout} />}
           </div>
         </nav>
       </header>

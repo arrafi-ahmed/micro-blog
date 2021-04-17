@@ -25,7 +25,7 @@ const Comment = ({
             <small className='fst-italic ps-1'>{localDate(createdAt)}</small>
           </div>
         </div>
-        <p>{details}</p>
+        <p className='m-1'>{details}</p>
       </div>
     </>
   )
