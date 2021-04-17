@@ -48,7 +48,7 @@ exports.check_credentials = (req, res) => {
     })
 }
 exports.get_posts_by_user_id = (req, res) => {
-  User.findOne({ _id: req.body.userId || req.userId })
+  User.findById(req.body.userId || req.userId)
     .select('username createdAt')
     .populate({ path: 'posts', options: { sort: { createdAt: -1 } } })
     .then((user) => {
@@ -57,7 +57,7 @@ exports.get_posts_by_user_id = (req, res) => {
     .catch((err) => res.status(500).json({ message: 'Server error' }))
 }
 exports.get_own_profile = (req, res) => {
-  User.findOne({ _id: req.userId })
+  User.findById(req.userId)
     .select('username createdAt')
     .populate({ path: 'posts', options: { sort: { createdAt: -1 } } })
     .then((user) => {

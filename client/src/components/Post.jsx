@@ -29,7 +29,6 @@ const Post = ({
   const handleUpvote = (e) => {
     e.preventDefault()
     if (!token || disableVote.upvote) return
-    console.log(disableVote)
     setDisableVote({ upvote: true, downvote: false })
     setUpvote(upvote + 1)
     PostApi.createUpvote({ postId: _id })
@@ -41,6 +40,7 @@ const Post = ({
       })
       .catch((err) => {
         setUpvote(upvote)
+        console.log(err)
         global.setAlert({
           type: 'danger',
           message: err.response ? err.response.data.message : err.toString(),
@@ -50,7 +50,6 @@ const Post = ({
   const handleDownvote = (e) => {
     e.preventDefault()
     if (!token || disableVote.downvote) return
-    console.log(disableVote)
     setDisableVote({ downvote: true, upvote: false })
     setDownvote(downvote + 1)
     PostApi.createDownvote({ postId: _id })

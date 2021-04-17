@@ -34,7 +34,7 @@ exports.create_post = (req, res) => {
     .catch((err) => res.status(500).json({ message: 'Server error' }))
 }
 exports.get_comments_by_post = (req, res) => {
-  Post.findOne({ _id: req.body.postId })
+  Post.findById(req.body.postId)
     .select('comments')
     .populate({
       path: 'comments',
@@ -53,134 +53,138 @@ exports.get_comments_by_post = (req, res) => {
     })
 }
 exports.create_upvote = (req, res) => {
-  User.findById(req.userId)
+  let changeDownvote = false
+  const upvote = User.findById(req.userId)
+    .exec()
     .then((user) => {
+      if (!user) throw new Error('Downvote failed')
+
       // check if post not in upvotes and insert
-      if (user.upvotes.indexOf(req.body.postId) === -1) {
-        User.updateOne(
-          { _id: req.userId },
-          { $push: { upvotes: req.body.postId } }
-        )
-          .then((user) => {
-            // increase upvote count
-            if (user.nModified > 0) {
-              return Post.updateOne(
-                { _id: req.body.postId },
-                { $inc: { upvote_count: 1 } }
-              )
-            } else {
-              throw new Error('Upvote failed')
-            }
-          })
-          .then((post) => {
-            // check if post in downvotes and remove
-            if (user.downvotes.indexOf(req.body.postId) !== -1) {
-              return User.updateOne(
-                { _id: req.userId },
-                { $pull: { downvotes: req.body.postId } }
-              )
-            } else {
-              res.status(200).json({
-                message: 'Upvote successfull',
-                changeDownvote: false,
-              })
-            }
-          })
-          .then((user) => {
-            // decrease downvote count
-            if (user.nModified > 0) {
-              return Post.updateOne(
-                { _id: req.body.postId },
-                { $inc: { downvote_count: -1 } }
-              )
-            } else {
-              throw new Error('Upvote failed')
-            }
-          })
-          .then((post) => {
-            if (post.nModified > 0) {
-              res.status(200).json({
-                message: 'Upvote successfull',
-                changeDownvote: true,
-              })
-            } else {
-              throw new Error('Upvote failed')
-            }
-          })
-          .catch((err) => {
-            res.status(500).json({ message: 'Server error' })
-          })
-      } else {
-        throw new Error('Upvote failed')
-      }
+      if (user.upvotes.indexOf(req.body.postId) !== -1)
+        throw new Error('Already upvoted')
+      return User.updateOne(
+        { _id: req.userId },
+        { $push: { upvotes: req.body.postId } }
+      ).exec()
+    })
+    .then((user) => {
+      // increase upvote count
+      if (user.nModified == 0) throw new Error('Upvote failed')
+      return Post.updateOne(
+        { _id: req.body.postId },
+        { $inc: { upvote_count: 1 } }
+      ).exec()
+    })
+
+  const downvote = User.findById(req.userId)
+    .exec()
+    .then((user) => {
+      if (!user) throw new Error('Upvote failed')
+
+      // check if post in downvotes and remove
+      if (user.downvotes.indexOf(req.body.postId) === -1)
+        return Promise.resolve()
+      return User.updateOne(
+        { _id: req.userId },
+        { $pull: { downvotes: req.body.postId } }
+      )
+        .exec()
+        .then((user) => {
+          // decrease downvote count
+
+          return Post.updateOne(
+            { _id: req.body.postId },
+            { $inc: { downvote_count: -1 } }
+          ).exec()
+        })
+        .then((post) => {
+          if (post.nModified > 0) {
+            changeDownvote = true
+          }
+        })
+    })
+
+  Promise.all([upvote, downvote])
+    .then((result) => {
+      res.status(200).json({
+        message: 'Upvote successfull',
+        changeDownvote,
+      })
     })
     .catch((err) => {
-      res.status(500).json({ message: 'Server error' })
+      if (err.message == 'Upvote failed' || err.message == 'Already upvoted') {
+        res.status(400).json({ message: err.toString() })
+      } else {
+        res.status(500).json({ message: 'Server Error' })
+      }
     })
 }
 exports.create_downvote = (req, res) => {
-  User.findById(req.userId)
+  let changeUpvote = false
+  const downvote = User.findById(req.userId)
+    .exec()
     .then((user) => {
+      if (!user) throw new Error('Downvote failed')
+
       // check if post not in downvotes and insert
-      if (user.downvotes.indexOf(req.body.postId) === -1) {
-        User.updateOne(
-          { _id: req.userId },
-          { $push: { downvotes: req.body.postId } }
-        )
-          .then((user) => {
-            // increase downvote count
-            if (user.nModified > 0) {
-              return Post.updateOne(
-                { _id: req.body.postId },
-                { $inc: { downvote_count: 1 } }
-              )
-            } else {
-              throw new Error('Downvote failed')
-            }
-          })
-          .then((post) => {
-            // check if post in upvotes and remove
-            if (user.upvotes.indexOf(req.body.postId) !== -1) {
-              return User.updateOne(
-                { _id: req.userId },
-                { $pull: { upvotes: req.body.postId } }
-              )
-            } else {
-              res.status(200).json({
-                message: 'Downvote successfull',
-                changeUpvote: false,
-              })
-            }
-          })
-          .then((user) => {
-            // decrease upvote count
-            if (user.nModified > 0) {
-              return Post.updateOne(
-                { _id: req.body.postId },
-                { $inc: { upvote_count: -1 } }
-              )
-            } else {
-              throw new Error('Downvote failed')
-            }
-          })
-          .then((post) => {
-            if (post.nModified > 0) {
-              res.status(200).json({
-                message: 'Downvote successfull',
-                changeUpvote: true,
-              })
-            } else {
-              throw new Error('Downvote failed')
-            }
-          })
-          .catch((err) => {
-            res.status(500).json({ message: 'Server error' })
-          })
-      } else {
-        throw new Error('Downvote failed')
-      }
+      if (user.downvotes.indexOf(req.body.postId) !== -1)
+        throw new Error('Already downvoted')
+      return User.updateOne(
+        { _id: req.userId },
+        { $push: { downvotes: req.body.postId } }
+      ).exec()
+    })
+    .then((user) => {
+      // increase downvote count
+      if (user.nModified == 0) throw new Error('Downvote failed')
+      return Post.updateOne(
+        { _id: req.body.postId },
+        { $inc: { downvote_count: 1 } }
+      ).exec()
+    })
+
+  const upvote = User.findById(req.userId)
+    .exec()
+    .then((user) => {
+      if (!user) throw new Error('Downvote failed')
+
+      // check if post in upvotes and remove
+      if (user.upvotes.indexOf(req.body.postId) === -1) return Promise.resolve()
+      return User.updateOne(
+        { _id: req.userId },
+        { $pull: { upvotes: req.body.postId } }
+      )
+        .exec()
+        .then((user) => {
+          // decrease upvote count
+
+          return Post.updateOne(
+            { _id: req.body.postId },
+            { $inc: { upvote_count: -1 } }
+          ).exec()
+        })
+        .then((post) => {
+          if (post.nModified > 0) {
+            changeUpvote = true
+          }
+        })
+    })
+
+  Promise.all([downvote, upvote])
+    .then((result) => {
+      res.status(200).json({
+        message: 'Downvote successfull',
+        changeUpvote,
+      })
     })
     .catch((err) => {
-      res.status(500).json({ message: 'Server error' })
+      if (
+        err.message == 'Downvote failed' ||
+        err.message == 'Already downvoted'
+      ) {
+        res.status(400).json({ message: err.toString() })
+      } else {
+        res.status(500).json({ message: 'Server Error' })
+      }
     })
 }
